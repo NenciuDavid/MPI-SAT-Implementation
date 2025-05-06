@@ -1,4 +1,7 @@
 import copy
+import time
+import tracemalloc
+
 def complement(literal):
     if literal[0]=='-':
         return literal[1:]
@@ -146,7 +149,13 @@ def davisPutnamShortestPair(K):
 
 def DPLL(K):
     kPrime = K.copy()
-    while(set() not in kPrime or kPrime==[]):
+    while True:
+        if(set() in kPrime):
+            print("Empty clause found in kPrime")
+            return False
+        if(kPrime==[]):
+            print("Empty set of clauses")
+            return True
         isOneLiteralRuleAplicable=verifyOneLiteralRule(kPrime)
         if(isOneLiteralRuleAplicable!=None):
             print("Applying one literal rule for: ", isOneLiteralRuleAplicable)
@@ -174,12 +183,7 @@ def DPLL(K):
                         return True
                     else:
                         return False
-    if(set() in kPrime):
-        print("Empty clause found in kPrime")
-        return False
-    if(kPrime==[]):
-        print("Empty set of clauses")
-        return True
+    
 
 def MOMS(K):
     minSize = None
@@ -201,7 +205,13 @@ def MOMS(K):
 
 def DPLLMOMS(K):
     kPrime = K.copy()
-    while(set() not in kPrime or kPrime==[]):
+    while True:
+        if(set() in kPrime):
+            print("Empty clause found in kPrime")
+            return False
+        if(kPrime==[]):
+            print("Empty set of clauses")
+            return True
         isOneLiteralRuleAplicable=verifyOneLiteralRule(kPrime)
         if(isOneLiteralRuleAplicable!=None):
             print("Applying one literal rule for: ", isOneLiteralRuleAplicable)
@@ -229,12 +239,6 @@ def DPLLMOMS(K):
                         return True
                     else:
                         return False
-    if(set() in kPrime):
-        print("Empty clause found in kPrime")
-        return False
-    if(kPrime==[]):
-        print("Empty set of clauses")
-        return True
 
 setOfClauses = list() 
 clause = input()
@@ -247,9 +251,25 @@ userInput=input("Choose 1 for resolution, 2 for DP or 3 for DPLL: ")
 if(userInput=='1'):
     userInput=input("Choose 1 for random choice resolution or 2 for shortest pair resolution: ")
     if(userInput=='1'):
+        tracemalloc.start()
+        startingTime = time.perf_counter()
         responseResolution=resolution(setOfClauses)
+        endingTime = time.perf_counter()
+        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+        memoryInMB = peakMemoryUsed / 10**6
+        totalTime = endingTime - startingTime
+        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
     elif(userInput=='2'):
+        tracemalloc.start()
+        startingTime = time.perf_counter()
         responseResolution=resolutionShortestPair(setOfClauses)
+        endingTime = time.perf_counter()
+        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+        memoryInMB = peakMemoryUsed / 10**6
+        totalTime = endingTime - startingTime
+        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
     if(responseResolution==True):
         print("satisfiable")
     else:
@@ -257,9 +277,25 @@ if(userInput=='1'):
 elif(userInput=='2'):
     userInput=input("Choose 1 for resolution, 2 for DP or 3 for DPLL: ")
     if(userInput=='1'):
-        responseDP=davisPutnam(setOfClauses)
+        tracemalloc.start()
+        startingTime = time.perf_counter()
+        responseDP = davisPutnam(setOfClauses)
+        endingTime = time.perf_counter()
+        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+        memoryInMB = peakMemoryUsed / 10**6
+        totalTime = endingTime - startingTime
+        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
     elif(userInput=='2'):
-        responseDP=davisPutnamShortestPair(setOfClauses)
+        tracemalloc.start()
+        startingTime = time.perf_counter()
+        responseDP = davisPutnamShortestPair(setOfClauses)
+        endingTime = time.perf_counter()
+        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+        memoryInMB = peakMemoryUsed / 10**6
+        totalTime = endingTime - startingTime
+        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
     if(responseDP==True):
         print("satisfiable")
     else:
@@ -267,9 +303,25 @@ elif(userInput=='2'):
 elif(userInput=='3'):
     userInput=input("Choose 1 for first literal split DPLL or 2 for Maximum Occureences in clauses of Minimum Size DPLL: ")
     if(userInput=='1'):
-        responseDPLL=DPLL(setOfClauses)
+        tracemalloc.start()
+        startingTime = time.perf_counter()
+        responseDPLL = DPLL(setOfClauses)
+        endingTime = time.perf_counter()
+        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+        memoryInMB = peakMemoryUsed / 10**6
+        totalTime = endingTime - startingTime
+        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
     elif(userInput=='2'):
-        responseDPLL=DPLLMOMS(setOfClauses)
+        tracemalloc.start()
+        startingTime = time.perf_counter()
+        responseDPLL = DPLLMOMS(setOfClauses)
+        endingTime = time.perf_counter()
+        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+        memoryInMB = peakMemoryUsed / 10**6
+        totalTime = endingTime - startingTime
+        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
     if(responseDPLL==True):
         print("satisfiable")
     else:
