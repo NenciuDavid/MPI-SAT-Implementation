@@ -1,6 +1,20 @@
 import copy
 import time
 import tracemalloc
+import csv
+
+csv_file = "results.csv"
+
+def init_csv():
+    with open(csv_file, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["SAT Algorithm", "Mode", "Satifiable/Unsatisfiable", "Time (seconds)", "Peak memory used (MB)"])
+
+def saveResult(algorithm, mode="", sat="", seconds=0.0, memory=0.0):
+    with open(csv_file, "a", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([algorithm, mode, sat, seconds, memory])
+
 
 def complement(literal):
     if literal[0]=='-':
@@ -247,82 +261,118 @@ while clause!="0":
     setOfClauses.append(clause)
     clause = input()
 print(setOfClauses)
-userInput=input("Choose 1 for resolution, 2 for DP or 3 for DPLL: ")
-if(userInput=='1'):
-    userInput=input("Choose 1 for random choice resolution or 2 for shortest pair resolution: ")
-    if(userInput=='1'):
-        tracemalloc.start()
-        startingTime = time.perf_counter()
-        responseResolution=resolution(setOfClauses)
-        endingTime = time.perf_counter()
-        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
-        memoryInMB = peakMemoryUsed / 10**6
-        totalTime = endingTime - startingTime
-        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
-    elif(userInput=='2'):
-        tracemalloc.start()
-        startingTime = time.perf_counter()
-        responseResolution=resolutionShortestPair(setOfClauses)
-        endingTime = time.perf_counter()
-        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
-        memoryInMB = peakMemoryUsed / 10**6
-        totalTime = endingTime - startingTime
-        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
-    if(responseResolution==True):
-        print("satisfiable")
-    else:
-        print("unsatisfiable")
-elif(userInput=='2'):
-    userInput=input("Choose 1 for resolution, 2 for DP or 3 for DPLL: ")
-    if(userInput=='1'):
-        tracemalloc.start()
-        startingTime = time.perf_counter()
-        responseDP = davisPutnam(setOfClauses)
-        endingTime = time.perf_counter()
-        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
-        memoryInMB = peakMemoryUsed / 10**6
-        totalTime = endingTime - startingTime
-        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
-    elif(userInput=='2'):
-        tracemalloc.start()
-        startingTime = time.perf_counter()
-        responseDP = davisPutnamShortestPair(setOfClauses)
-        endingTime = time.perf_counter()
-        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
-        memoryInMB = peakMemoryUsed / 10**6
-        totalTime = endingTime - startingTime
-        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
-    if(responseDP==True):
-        print("satisfiable")
-    else:
-        print("unsatisfiable")
-elif(userInput=='3'):
-    userInput=input("Choose 1 for first literal split DPLL or 2 for Maximum Occureences in clauses of Minimum Size DPLL: ")
-    if(userInput=='1'):
-        tracemalloc.start()
-        startingTime = time.perf_counter()
-        responseDPLL = DPLL(setOfClauses)
-        endingTime = time.perf_counter()
-        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
-        memoryInMB = peakMemoryUsed / 10**6
-        totalTime = endingTime - startingTime
-        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
-    elif(userInput=='2'):
-        tracemalloc.start()
-        startingTime = time.perf_counter()
-        responseDPLL = DPLLMOMS(setOfClauses)
-        endingTime = time.perf_counter()
-        currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
-        memoryInMB = peakMemoryUsed / 10**6
-        totalTime = endingTime - startingTime
-        print(f"Result obtained in {totalTime}, using {memoryInMB} MB peak memory.")
-    if(responseDPLL==True):
-        print("satisfiable")
-    else:
-        print("unsatisfiable")
+init_csv()
+# Resolution clasic
+SOC = copy.deepcopy(setOfClauses)
+tracemalloc.start()
+startingTime = time.perf_counter()
+responseResolution=resolution(SOC)
+endingTime = time.perf_counter()
+currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+memoryInMB = peakMemoryUsed / 10**6
+totalTime = endingTime - startingTime
+satis = None
+print(f"Result of resolution clasic obtained in {totalTime}, using {memoryInMB} MB peak memory.")
+if(responseResolution==True):
+    print("satisfiable")
+    satis = "Satisfiable"
+else:
+    print("unsatisfiable")
+    satis = "Unsatisfiable"
+saveResult("Resolution", "Clasic", satis, totalTime, memoryInMB)
+# Resolution shortest pair
+SOC = copy.deepcopy(setOfClauses)
+tracemalloc.start()
+startingTime = time.perf_counter()
+responseResolution=resolutionShortestPair(SOC)
+endingTime = time.perf_counter()
+currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+memoryInMB = peakMemoryUsed / 10**6
+totalTime = endingTime - startingTime
+satis = None
+print(f"Result of resolution shortest pair obtained in {totalTime}, using {memoryInMB} MB peak memory.")
+if(responseResolution==True):
+    print("satisfiable")
+    satis = "Satisfiable"
+else:
+    print("unsatisfiable")
+    satis = "Unsatisfiable"
+saveResult("Resolution", "Shortest Pair", satis, totalTime, memoryInMB)
+# DP clasic
+SOC = copy.deepcopy(setOfClauses)
+tracemalloc.start()
+startingTime = time.perf_counter()
+responseDP = davisPutnam(SOC)
+endingTime = time.perf_counter()
+currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+memoryInMB = peakMemoryUsed / 10**6
+totalTime = endingTime - startingTime
+satis = None
+print(f"Result of DP clasic obtained in {totalTime}, using {memoryInMB} MB peak memory.")
+if(responseDP==True):
+    print("satisfiable")
+    satis = "Satisfiable"
+else:
+    print("unsatisfiable")
+    satis = "Unsatisfiable"
+saveResult("Davis Putnam", "Clasic", satis, totalTime, memoryInMB)
+# DP shortest pair
+SOC = copy.deepcopy(setOfClauses)
+tracemalloc.start()
+startingTime = time.perf_counter()
+responseDP = davisPutnamShortestPair(SOC)
+endingTime = time.perf_counter()
+currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+memoryInMB = peakMemoryUsed / 10**6
+totalTime = endingTime - startingTime
+satis = None
+print(f"Result of DP shortest pair obtained in {totalTime}, using {memoryInMB} MB peak memory.")
+if(responseDP==True):
+    print("satisfiable")
+    satis = "Satisfiable"
+else:
+    print("unsatisfiable")
+    satis = "Unsatisfiable"
+saveResult("Davis Putnam", "Shortest Pair", satis, totalTime, memoryInMB)
+# DPLL clasic
+SOC = copy.deepcopy(setOfClauses)
+tracemalloc.start()
+startingTime = time.perf_counter()
+responseDPLL = DPLL(SOC)
+endingTime = time.perf_counter()
+currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+memoryInMB = peakMemoryUsed / 10**6
+totalTime = endingTime - startingTime
+satis = None
+print(f"Result of DPLL clasic obtained in {totalTime}, using {memoryInMB} MB peak memory.")
+if(responseDPLL==True):
+    print("satisfiable")
+    satis = "satisfiable"
+else:
+    print("unsatisfiable")
+    satis = "unsatisfiable"
+saveResult("DPLL", "Clasic", satis, totalTime, memoryInMB)
+# DPLL MOMS
+SOC = copy.deepcopy(setOfClauses)
+tracemalloc.start()
+startingTime = time.perf_counter()
+responseDPLL = DPLLMOMS(SOC)
+endingTime = time.perf_counter()
+currentMemory, peakMemoryUsed = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+memoryInMB = peakMemoryUsed / 10**6
+totalTime = endingTime - startingTime
+satis = None
+print(f"Result of DPLL MOMS obtained in {totalTime}, using {memoryInMB} MB peak memory.")
+if(responseDPLL==True):
+    print("satisfiable")
+    satis = "satisfiable"
+else:
+    print("unsatisfiable")
+    satis = "unsatisfiable"
+saveResult("DPLL", "MOMS", satis, totalTime, memoryInMB)
