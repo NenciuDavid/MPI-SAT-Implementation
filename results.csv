@@ -1,7 +1,3 @@
 SAT Algorithm,Mode,Satifiable/Unsatisfiable,Time (seconds),Peak memory used (MB)
-Resolution,Clasic,Satisfiable,5.646648100000675,0.143098
-Resolution,Shortest Pair,Satisfiable,29.48286520000056,0.142994
-Davis Putnam,Clasic,Satisfiable,0.046315100000356324,0.075304
-Davis Putnam,Shortest Pair,Satisfiable,0.045753300000797026,0.06788
-DPLL,Clasic,satisfiable,0.04505909999988944,0.057752
-DPLL,MOMS,satisfiable,0.04665170000043872,0.057752
+DPLL,Clasic,satisfiable,0.0018153000000893371,0.008848
+DPLL,MOMS,satisfiable,0.0017788000000109605,0.00872
