@@ -371,8 +371,8 @@ satis = None
 print(f"Result of DPLL MOMS obtained in {totalTime}, using {memoryInMB} MB peak memory.")
 if(responseDPLL==True):
     print("satisfiable")
-    satis = "Satisfiable"
+    satis = "satisfiable"
 else:
     print("unsatisfiable")
-    satis = "Unsatisfiable"
+    satis = "unsatisfiable"
 saveResult("DPLL", "MOMS", satis, totalTime, memoryInMB)
